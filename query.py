@@ -15,16 +15,16 @@ args = parser.parse_args()
 db = sqlite3.connect("file:" + args.document + "?mode=ro")
 csv_writer = csv.writer(sys.stdout)
 
-id = db.execute('SELECT z_pk FROM zaccount WHERE zname=? AND zfinancialaccount=1', (args.account, ))
-try:
-    params = (id.next()[0],)
-except:
+account_id = db.execute('SELECT z_pk FROM zaccount WHERE zname=? AND zfinancialaccount=1', (args.account,))
+
+params = next(account_id, None)
+if params is None:
     raise Exception("Couldn't find account called '%s'" % args.account)
 
-if args.search is not None:
-    params += ('%' + args.search + '%',)
-else:
-    params += ('%',)
+
+params += ('%'+args.search+'%' if args.search is not None
+           else '%', )
+
 
 result = db.execute('''SELECT date(t.zdate, 'unixepoch', '+31 years') AS DATE,
   li.zamount, t.ztitle, li.zmemo, t.znote, t.zcleared --, '....', *
