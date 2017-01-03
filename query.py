@@ -27,7 +27,7 @@ params += ('%'+args.search+'%' if args.search is not None
 
 
 result = db.execute('''SELECT date(t.zdate, 'unixepoch', '+31 years') AS DATE,
-  li.zamount, t.ztitle, li.zmemo, t.znote, t.zcleared --, '....', *
+  li.zamount, t.ztitle, t.zchecknumber, li.zmemo, t.znote, t.zcleared --, '....', *
   FROM zlineitem li
   JOIN ztransaction t ON li.ztransaction = t.z_pk
   WHERE zaccount=?
